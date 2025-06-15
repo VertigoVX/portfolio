@@ -67,7 +67,7 @@ export default function PortfolioHome() {
                 loop
                 playsInline
                 preload="auto"
-                className="absolute top-0 left-0 w-full h-full object-cover"
+                className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <h1 className="text-4xl md:text-6xl font-bold">Hi, I'm Tristan, Welcome to my Portfolio</h1>
@@ -82,7 +82,7 @@ export default function PortfolioHome() {
                 loop
                 playsInline
                 preload="auto"
-                className="absolute top-0 left-0 w-full h-full object-cover"
+                className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
               />
             </section>
 
@@ -95,7 +95,7 @@ export default function PortfolioHome() {
                 loop
                 playsInline
                 preload="auto"
-                className="absolute top-0 left-0 w-full h-full object-cover -z-10 opacity-30"
+                className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
               />
               <h2 className="text-3xl font-bold mb-10">About Me</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -170,7 +170,7 @@ export default function PortfolioHome() {
                 loop
                 playsInline
                 preload="auto"
-                className="absolute top-0 left-0 w-full h-full object-cover -z-10 opacity-20"
+                className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
               />
               <h2 className="text-3xl font-bold mb-10">Projects</h2>
               <div className="grid md:grid-cols-3 gap-8">
@@ -210,7 +210,7 @@ export default function PortfolioHome() {
                 loop
                 playsInline
                 preload="auto"
-                className="absolute top-0 left-0 w-full h-full object-cover -z-10 opacity-30"
+                className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
               />
               <h2 className="text-3xl font-bold mb-10">Contact Me</h2>
               <form className="max-w-xl space-y-6" action="https://formspree.io/f/mwkglyzb" method="POST">
