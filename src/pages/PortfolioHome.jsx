@@ -35,9 +35,9 @@ export default function PortfolioHome() {
             exit={{ opacity: 0, transition: { duration: 1 } }}
           >
             <video src="/videos/loading.mp4" autoPlay muted loop playsInline preload="auto" className="w-48" />
-            <div className="mt-4 w-48 h-1 bg-gray-700 relative overflow-hidden">
+            <div className="relative min-h-screen overflow-hidden mt-4 w-48 h-1 bg-gray-700 overflow-hidden">
               <motion.div
-                className="absolute top-0 left-0 h-full bg-white"
+                className="relative min-h-screen overflow-hidden absolute top-0 left-0 bg-white"
                 animate={{ width: ["0%", "100%"] }}
                 transition={{ duration: 10, ease: "linear" }}
               />
@@ -49,7 +49,7 @@ export default function PortfolioHome() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 1.5 } }}
           >
-            <nav className="flex justify-between px-10 py-6 bg-black border-b border-white fixed top-0 left-0 w-full z-50">
+            <nav className="relative min-h-screen overflow-hidden flex justify-between px-10 py-6 bg-black border-b border-white fixed top-0 left-0 z-50">
               <ul className="flex gap-8 text-lg font-medium">
                 <li><a href="#home" title="Back to top">Tristan David</a></li>
                 <li><a href="#about" title="Learn more about me">About Me</a></li>
@@ -59,7 +59,7 @@ export default function PortfolioHome() {
               </ul>
             </nav>
 
-            <section id="home" className="relative w-full h-[80vh] overflow-hidden pt-20">
+            <section id="home" className="relative min-h-screen overflow-hidden w-full h-[80vh] overflow-hidden pt-20">
               <video
                 src="/videos/hero.mp4"
                 autoPlay
@@ -69,12 +69,12 @@ export default function PortfolioHome() {
                 preload="auto"
                 className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
               />
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center z-10 flex items-center justify-center h-full">
                 <h1 className="text-4xl md:text-6xl font-bold">Hi, I'm Tristan, Welcome to my Portfolio</h1>
               </div>
             </section>
 
-            <section className="relative w-full h-[50vh] overflow-hidden">
+            <section className="relative min-h-screen overflow-hidden w-full h-[50vh] overflow-hidden">
               <video
                 src="/videos/transition.mp4"
                 autoPlay
@@ -86,7 +86,7 @@ export default function PortfolioHome() {
               />
             </section>
 
-            <motion.section id="about" className="relative px-10 py-20 text-white"
+            <motion.section id="about" className="relative min-h-screen overflow-hidden px-10 py-20 text-white"
               variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <video
                 src="/videos/about-bg.mp4"
@@ -143,7 +143,7 @@ export default function PortfolioHome() {
             <motion.section id="experience" className="px-10 py-20 bg-black text-white"
               variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <h2 className="text-3xl font-bold mb-10">Work Experience</h2>
-              <svg className="w-full h-64" viewBox="0 0 1000 200">
+              <svg className="relative min-h-screen overflow-hidden h-64" viewBox="0 0 1000 200">
                 <motion.path
                   d="M 0 180 Q 250 150, 500 80 Q 750 30, 1000 20"
                   stroke="white"
@@ -161,7 +161,7 @@ export default function PortfolioHome() {
               </div>
             </motion.section>
 
-            <motion.section id="projects" className="relative px-10 py-20 text-white"
+            <motion.section id="projects" className="relative min-h-screen overflow-hidden px-10 py-20 text-white"
               variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <video
                 src="/videos/projects-bg.mp4"
@@ -201,7 +201,7 @@ export default function PortfolioHome() {
               <p className="mt-8">View more of my projects on my <a className="text-blue-300 underline" href="https://github.com/VertigoVX" target="_blank">Github portfolio</a>.</p>
             </motion.section>
 
-            <motion.section id="contact" className="relative px-10 py-20 text-white"
+            <motion.section id="contact" className="relative min-h-screen overflow-hidden px-10 py-20 text-white"
               variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <video
                 src="/videos/contact-bg.mp4"
@@ -216,19 +216,19 @@ export default function PortfolioHome() {
               <form className="max-w-xl space-y-6" action="https://formspree.io/f/mwkglyzb" method="POST">
                 <div>
                   <label>Name</label>
-                  <input name="name" className="w-full p-2 bg-white/10 border border-white/20 rounded" type="text" required />
+                  <input name="name" className="relative min-h-screen overflow-hidden p-2 bg-white/10 border border-white/20 rounded" type="text" required />
                 </div>
                 <div>
                   <label>Email Address</label>
-                  <input name="email" className="w-full p-2 bg-white/10 border border-white/20 rounded" type="email" required />
+                  <input name="email" className="relative min-h-screen overflow-hidden p-2 bg-white/10 border border-white/20 rounded" type="email" required />
                 </div>
                 <div>
                   <label>Subject</label>
-                  <input name="subject" className="w-full p-2 bg-white/10 border border-white/20 rounded" type="text" required />
+                  <input name="subject" className="relative min-h-screen overflow-hidden p-2 bg-white/10 border border-white/20 rounded" type="text" required />
                 </div>
                 <div>
                   <label>Message</label>
-                  <textarea name="message" className="w-full p-2 bg-white/10 border border-white/20 rounded" rows="4" required></textarea>
+                  <textarea name="message" className="relative min-h-screen overflow-hidden p-2 bg-white/10 border border-white/20 rounded" rows="4" required></textarea>
                 </div>
                 <Button type="submit" className="bg-white text-black px-6 py-2 rounded-full hover:bg-gray-200">Submit</Button>
               </form>
