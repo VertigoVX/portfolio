@@ -284,11 +284,13 @@
       if (elapsed >= loadingDuration) clearInterval(loaderInterval);
     }, 100);
 
-    // Hide loading and show main after 7s
+    // Hide loading and show main after 10s, then autoplay hero video
     setTimeout(() => {
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('main-content').style.display = 'block';
       initAnimations();
+      // After main is visible, ensure hero video plays on mobile
+      if (typeof attemptAutoplay === 'function') attemptAutoplay();
     }, 10000);
 
     function initAnimations() {
