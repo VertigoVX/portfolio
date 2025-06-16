@@ -214,7 +214,7 @@
     <!-- CONTACT -->
     <section id="contact">
       <h2 style="text-align:center; margin-bottom:2rem;">Contact Me</h2>
-      <form>
+      <form id="contact-form">
         <input type="text" name="name" placeholder="Name" required />
         <input type="email" name="email" placeholder="Email Address" required />
         <input type="text" name="subject" placeholder="Subject" />
@@ -276,6 +276,29 @@
         });
       });
     }
+  </script>
+
+  <!-- Contact Form -->
+  <script>
+    document
+      .getElementById('contact-form')
+      .addEventListener('submit', function(event) {
+        event.preventDefault();  // stop normal form submit
+
+        // grab field values
+        const name    = encodeURIComponent(this.name.value);
+        const email   = encodeURIComponent(this.email.value);
+        const subject = encodeURIComponent(this.subject.value);
+        const message = encodeURIComponent(this.message.value);
+
+        // build mailto link
+        const mailto = `mailto:tristan.david1503@icloud.com`
+                    + `?subject=${subject}`
+                    + `&body=Name:%20${name}%0D%0AEmail:%20${email}%0D%0A%0D%0A${message}`;
+
+        // open user’s email client
+        window.location.href = mailto;
+      });
   </script>
 
 </body>
