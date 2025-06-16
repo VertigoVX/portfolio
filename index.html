@@ -138,7 +138,7 @@
 
   <!-- LOADING SCREEN -->
   <div id="loading-screen">
-    <video class="loading-video" src="/videos/loading.mp4" muted autoplay playsinline webkit-playsinline></video>
+    <video class="loading-video" src="/videos/loading.mp4" muted autoplay playsinline webkit-playsinline preload="auto"></video>
     <div class="loading-bar"></div>
   </div>
 
@@ -159,7 +159,7 @@
     <!-- HOME -->
     <section id="home">
       <div class="hero-video-container">
-        <video src="/videos/hero.mp4" autoplay muted loop playsinline webkit-playsinline></video>
+        <video src="/videos/hero.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
       </div>
       <h1><strong>Hi, I'm Tristan</strong>, Welcome to my Portfolio</h1>
     </section>
@@ -382,11 +382,27 @@
 
   <script>
     // Programmatically ensure videos autoplay on mobile
-    window.addEventListener('load', function() {
-      const loadingVid = document.querySelector('.loading-video');
-      if (loadingVid) loadingVid.play().catch(e => console.warn('Autoplay prevented for loading video.', e));
-      const heroVid = document.querySelector('.hero-video-container video');
-      if (heroVid) heroVid.play().catch(e => console.warn('Autoplay prevented for hero video.', e));
+    function attemptAutoplay() {
+      const vids = [
+        document.querySelector('.loading-video'),
+        document.querySelector('.hero-video-container video')
+      ];
+      vids.forEach(v => {
+        if (!v) return;
+        v.muted = true;
+        v.autoplay = true;
+        v.playsInline = true;
+        v.setAttribute('muted', '');
+        v.setAttribute('playsinline', '');
+        v.setAttribute('webkit-playsinline', '');
+        v.play().catch(e => console.warn('Autoplay prevented for video.', e));
+      });
+    }
+    window.addEventListener('DOMContentLoaded', attemptAutoplay);
+    window.addEventListener('load', attemptAutoplay);
+    document.addEventListener('touchstart', function onFirstTouch() {
+      attemptAutoplay();
+      document.removeEventListener('touchstart', onFirstTouch);
     });
   </script>
 
