@@ -156,10 +156,64 @@
       }
     }
 
+    /* Scroll progress bar */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 4px;
+      background: #00eaff; width: 0%; z-index: 10000;
+      transition: width 0.1s ease-out;
+    }
+    /* Active nav link */
+    nav ul li a.active {
+      border-bottom: 2px solid #00eaff;
+      color: #00eaff;
+    }
+    /* 3D card hover */
+    .projects-grid {
+      perspective: 1000px;
+    }
+    .project-card {
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+    .project-card:hover {
+      transform: rotateX(5deg) rotateY(-5deg) scale(1.02);
+    }
+    /* Hamburger menu */
+    #hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 25px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-left: 1rem;
+    }
+    #hamburger span {
+      width: 100%;
+      height: 3px;
+      background: #fff;
+      margin: 3px 0;
+      border-radius: 2px;
+      display: block;
+    }
+    /* Button/link animations */
+    a, button {
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    a:hover, button:hover {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+
   </style>
 </head>
 <body>
 
+  <div id="scroll-progress"></div>
   <div id="spotlight"></div>
 
   <!-- LOADING SCREEN -->
@@ -175,6 +229,7 @@
 
     <!-- NAVBAR -->
     <nav>
+      <button id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       <ul>
         <li><a href="#home">Tristan David</a></li>
         <li><a href="#about">About Me</a></li>
@@ -464,6 +519,36 @@
     attemptAutoplay();
     // Retry autoplay when main content is revealed (~10s later)
     setTimeout(attemptAutoplay, 10000);
+  </script>
+
+  <script>
+    // Scroll progress bar update
+    const progressBar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      if (!progressBar) return;
+      const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      progressBar.style.width = scrollPercent + '%';
+    });
+    // Scroll-Spy Active Section Highlight
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav ul li a');
+    const spyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        const link = document.querySelector(`nav ul li a[href="#${id}"]`);
+        if (entry.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+    sections.forEach(section => spyObserver.observe(section));
+    // Hamburger menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navElem = document.querySelector('nav');
+    if (hamburger && navElem) {
+      hamburger.addEventListener('click', () => navElem.classList.toggle('open'));
+    }
   </script>
 
 </body>
