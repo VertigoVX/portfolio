@@ -123,6 +123,11 @@
         margin: 0.5rem 0;
         font-size: 1.1rem;
       }
+      /* Ensure chart fits mobile screen */
+      #experience-chart {
+        width: 100% !important;
+        height: auto !important;
+      }
     }
 
   </style>
@@ -289,6 +294,7 @@
           }]
         },
         options: {
+          responsive: true,
           animation: { duration: 0 }, // start disabled
           scales: { y: { beginAtZero: true } }
         }
@@ -372,6 +378,16 @@
       once:      false
     }
   }); 
+  </script>
+
+  <script>
+    // Programmatically ensure videos autoplay on mobile
+    window.addEventListener('load', function() {
+      const loadingVid = document.querySelector('.loading-video');
+      if (loadingVid) loadingVid.play().catch(e => console.warn('Autoplay prevented for loading video.', e));
+      const heroVid = document.querySelector('.hero-video-container video');
+      if (heroVid) heroVid.play().catch(e => console.warn('Autoplay prevented for hero video.', e));
+    });
   </script>
 
 </body>
