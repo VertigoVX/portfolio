@@ -230,6 +230,15 @@
 
     /* Fade-in for mobile heading override */
     @keyframes fadeInText { from { opacity: 0; } to { opacity: 1; } }
+    /* Disable typing effect on small/medium screens (<=900px) */
+    @media (max-width: 900px) {
+      .typing {
+        white-space: normal !important;
+        overflow: visible !important;
+        border-right: none !important;
+        animation: fadeInText 1s ease forwards !important;
+      }
+    }
 
   </style>
 </head>
