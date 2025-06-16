@@ -208,6 +208,18 @@
       transform: scale(1.05);
       opacity: 0.8;
     }
+    /* Typing effect for hero heading */
+    .typing {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: .15em solid #fff;
+      animation:
+        typing 3.5s steps(40, end),
+        blink-caret .75s step-end infinite;
+    }
+    @keyframes typing { from { width: 0; } to { width: 100%; } }
+    @keyframes blink-caret { from, to { border-color: transparent; } 50% { border-color: #fff; } }
 
   </style>
 </head>
@@ -244,7 +256,7 @@
       <div class="hero-video-container">
         <video src="/videos/hero.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
       </div>
-      <h1><strong>Hi, I'm Tristan</strong>, Welcome to my Portfolio</h1>
+      <h1><span class="typing"><strong>Hi, I'm Tristan</strong>, Welcome to my Portfolio</span></h1>
     </section>
 
     <!-- ABOUT -->
