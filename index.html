@@ -404,6 +404,8 @@
       attemptAutoplay();
       document.removeEventListener('touchstart', onFirstTouch);
     });
+    // Immediately try autoplay on page load
+    attemptAutoplay();
   </script>
 
 </body>
