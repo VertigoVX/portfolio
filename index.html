@@ -149,6 +149,13 @@
         margin: 0.5rem 0;
         font-size: 1.1rem;
       }
+      /* Disable typing animation on mobile and allow wrap with fade-in */
+      .typing {
+        white-space: normal;
+        overflow: visible;
+        border-right: none;
+        animation: fadeInText 1s ease forwards;
+      }
       /* Ensure chart fits mobile screen */
       #experience-chart {
         width: 100% !important;
@@ -220,6 +227,9 @@
     }
     @keyframes typing { from { width: 0; } to { width: 100%; } }
     @keyframes blink-caret { from, to { border-color: transparent; } 50% { border-color: #fff; } }
+
+    /* Fade-in for mobile heading override */
+    @keyframes fadeInText { from { opacity: 0; } to { opacity: 1; } }
 
   </style>
 </head>
