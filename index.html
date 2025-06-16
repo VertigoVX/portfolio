@@ -48,6 +48,12 @@
       background: #fff;
       animation: load 10s ease-in-out forwards;
     }
+    /* Loading text indicator */
+    #loading-text {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #fff;
+    }
     @keyframes load { to { width: 100%; }}
 
     /* =============== SPOTLIGHT =============== */
@@ -145,6 +151,7 @@
   <div id="loading-screen">
     <img class="loading-image" src="/images/loading.png" alt="Loading" />
     <div class="loading-bar"></div>
+    <p id="loading-text">Loading 0%</p>
   </div>
 
   <!-- MAIN CONTENT -->
@@ -266,6 +273,17 @@
   </div>
 
   <script>
+    // Loading progress indicator
+    const loadingDuration = 10000;
+    const loadingTextElem = document.getElementById('loading-text');
+    const startTime = Date.now();
+    const loaderInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min(100, Math.floor((elapsed / loadingDuration) * 100));
+      if (loadingTextElem) loadingTextElem.textContent = `Loading ${percent}%`;
+      if (elapsed >= loadingDuration) clearInterval(loaderInterval);
+    }, 100);
+
     // Hide loading and show main after 7s
     setTimeout(() => {
       document.getElementById('loading-screen').style.display = 'none';
@@ -416,6 +434,8 @@
     });
     // Immediately try autoplay on page load
     attemptAutoplay();
+    // Retry autoplay when main content is revealed (~10s later)
+    setTimeout(attemptAutoplay, 10000);
   </script>
 
 </body>
