@@ -54,6 +54,20 @@
       font-size: 1rem;
       color: #fff;
     }
+    /* Continue button styling */
+    #continue-button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid #fff;
+      background: transparent;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #continue-button:hover {
+      background: rgba(255,255,255,0.2);
+    }
     @keyframes load { to { width: 100%; }}
 
     /* =============== SPOTLIGHT =============== */
@@ -152,6 +166,7 @@
     <img class="loading-image" src="/images/loading.png" alt="Loading" />
     <div class="loading-bar"></div>
     <p id="loading-text">Loading 0%</p>
+    <button id="continue-button">Press ESC or Click to Continue</button>
   </div>
 
   <!-- MAIN CONTENT -->
@@ -284,14 +299,19 @@
       if (elapsed >= loadingDuration) clearInterval(loaderInterval);
     }, 100);
 
-    // Hide loading and show main after 10s, then autoplay hero video
-    setTimeout(() => {
+    // Manual proceed from loading screen on button click or Escape key
+    function proceedFromLoading() {
+      clearInterval(loaderInterval);
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('main-content').style.display = 'block';
       initAnimations();
-      // After main is visible, ensure hero video plays on mobile
       if (typeof attemptAutoplay === 'function') attemptAutoplay();
-    }, 10000);
+    }
+    const continueBtn = document.getElementById('continue-button');
+    if (continueBtn) continueBtn.addEventListener('click', proceedFromLoading);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') proceedFromLoading();
+    });
 
     function initAnimations() {
       gsap.registerPlugin(ScrollTrigger);
