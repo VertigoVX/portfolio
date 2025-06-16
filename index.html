@@ -73,6 +73,11 @@
     h1 { font-size: 2.5rem; text-align: center; margin: 2rem 0; }
     h1 strong { font-weight: 800; }
 
+    /* =============== ANIMATED GREETING =============== */
+    #greeting { font-size: 2.5rem; text-align: center; margin: 2rem 0; overflow: hidden; }
+    #greeting .word { display: inline-block; opacity: 0; transform: translateY(50px); }
+    #greeting .word.bold { font-weight: 800; }
+
     /* =============== ABOUT ME =============== */
     #about .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 2rem; }
     #about h2 { font-weight: 700; margin-bottom: 0.5rem; }
@@ -139,9 +144,17 @@
     <!-- HOME -->
     <section id="home">
       <div class="hero-video-container">
-        <video src="/videos/hero.mp4" autoplay muted loop></video>
+        <video src="/videos/hero.mp4" autoplay muted loop playsinline preload="auto"></video>
       </div>
-      <h1><strong>Hi, I'm Tristan</strong>, Welcome to my Portfolio</h1>
+      <h1 id="greeting">
+        <span class="word">Hi,</span>
+        <span class="word bold">I'm</span>
+        <span class="word bold">Tristan,</span>
+        <span class="word">Welcome</span>
+        <span class="word">to</span>
+        <span class="word">my</span>
+        <span class="word">Portfolio</span>
+      </h1>
     </section>
 
     <!-- ABOUT -->
@@ -245,7 +258,8 @@
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('main-content').style.display = 'block';
       initAnimations();
-    }, 7000);
+      animateGreeting();
+    }, 10000);
 
     function initAnimations() {
       gsap.registerPlugin(ScrollTrigger);
@@ -256,6 +270,17 @@
           scrollTrigger: { trigger: sec, start: 'top 80%' }
         });
       });
+
+    function animateGreeting() {
+      const words = document.querySelectorAll('#greeting .word');
+      gsap.to(words, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power3.out',
+        stagger: 0.2
+      });
+    }
 
       // Chart animation on scroll
       const ctx = document.getElementById('experience-chart').getContext('2d');
