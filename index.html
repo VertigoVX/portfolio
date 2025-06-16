@@ -258,7 +258,6 @@
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('main-content').style.display = 'block';
       initAnimations();
-      animateGreeting();
     }, 10000);
 
     function initAnimations() {
@@ -270,17 +269,6 @@
           scrollTrigger: { trigger: sec, start: 'top 80%' }
         });
       });
-
-    function animateGreeting() {
-      const words = document.querySelectorAll('#greeting .word');
-      gsap.to(words, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: 'power3.out',
-        stagger: 0.2
-      });
-    }
 
       // Chart animation on scroll
       const ctx = document.getElementById('experience-chart').getContext('2d');
