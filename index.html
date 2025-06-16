@@ -395,7 +395,12 @@
         v.setAttribute('muted', '');
         v.setAttribute('playsinline', '');
         v.setAttribute('webkit-playsinline', '');
+        v.load();
         v.play().catch(e => console.warn('Autoplay prevented for video.', e));
+        v.addEventListener('canplay', function onCanPlay() {
+          v.play().catch(e => console.warn('Autoplay prevented at canplay.', e));
+          v.removeEventListener('canplay', onCanPlay);
+        });
       });
     }
     window.addEventListener('DOMContentLoaded', attemptAutoplay);
