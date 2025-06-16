@@ -56,6 +56,7 @@
     }
     /* Continue button styling */
     #continue-button {
+      display: none;
       margin-top: 1rem;
       padding: 0.5rem 1rem;
       border: 1px solid #fff;
@@ -296,7 +297,11 @@
       const elapsed = Date.now() - startTime;
       const percent = Math.min(100, Math.floor((elapsed / loadingDuration) * 100));
       if (loadingTextElem) loadingTextElem.textContent = `Loading ${percent}%`;
-      if (elapsed >= loadingDuration) clearInterval(loaderInterval);
+      if (elapsed >= loadingDuration) {
+        clearInterval(loaderInterval);
+        const btn = document.getElementById('continue-button');
+        if (btn) btn.style.display = 'inline-block';
+      }
     }, 100);
 
     // Manual proceed from loading screen on button click or Escape key
@@ -310,7 +315,8 @@
     const continueBtn = document.getElementById('continue-button');
     if (continueBtn) continueBtn.addEventListener('click', proceedFromLoading);
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') proceedFromLoading();
+      const btn = document.getElementById('continue-button');
+      if (e.key === 'Escape' && btn && btn.style.display !== 'none') proceedFromLoading();
     });
 
     function initAnimations() {
