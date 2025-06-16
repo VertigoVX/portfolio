@@ -27,7 +27,9 @@
       flex-direction: column; align-items: center; justify-content: center; z-index: 9999;
     }
     .loading-video {
-      max-width: 80%; display: block; margin: 0 auto; object-fit: contain;
+      width: 200px; /* smaller fixed size */
+      max-height: 150px;
+      object-fit: contain;
     }
     .loading-bar {
       width: 60%; height: 4px; border: 1px solid #fff; margin-top: 1rem; overflow: hidden;
@@ -198,4 +200,89 @@
         <div class="project-card">
           <h3>NFT Marketplace</h3>
           <p>Demonstration on how decentralized technologies can be used to build trustless and transparent marketplaces for digital assets.</p>
-          <a href="https://github.com/Vertigo
+          <a href="https://github.com/VertigoVX/nft-marketplace" target="_blank">View on GitHub</a>
+        </div>
+        <div class="project-card">
+          <h3>Crypto Wallet Generator</h3>
+          <p>Generate and manage cryptocurrency wallets for Ethereum and Bitcoin.</p>
+          <a href="https://github.com/VertigoVX/crypto-wallet-generator" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+      <p style="text-align:center; margin-top:2rem;"><a href="https://github.com/VertigoVX" target="_blank">View more on my GitHub</a></p>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <h2 style="text-align:center; margin-bottom:2rem;">Work Experience & Growth</h2>
+      <canvas id="experience-chart" width="800" height="400"></canvas>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <h2 style="text-align:center; margin-bottom:2rem;">Contact Me</h2>
+      <form>
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Email Address" required />
+        <input type="text" name="subject" placeholder="Subject" />
+        <textarea name="message" rows="5" placeholder="Message"></textarea>
+        <button type="submit">Send me an Email</button>
+      </form>
+    </section>
+
+  </div>
+
+  <script>
+    // Hide loading and show main after 7s
+    setTimeout(() => {
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      initAnimations();
+    }, 7000);
+
+    function initAnimations() {
+      gsap.registerPlugin(ScrollTrigger);
+      // Fade in sections
+      gsap.utils.toArray('section').forEach(sec => {
+        gsap.from(sec, {
+          opacity: 0, y: 50, duration: 1,
+          scrollTrigger: { trigger: sec, start: 'top 80%' }
+        });
+      });
+
+      // Chart animation on scroll
+      const ctx = document.getElementById('experience-chart').getContext('2d');
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['PA to Investment Banker', 'Junior Software Developer', 'Junior Full-Stack Developer'],
+          datasets: [{
+            label: 'Growth',
+            data: [10, 50, 100],
+            borderWidth: 3,
+            fill: false,
+            tension: 0.4,
+            borderColor: '#00eaff'
+          }]
+        },
+        options: {
+          animation: { duration: 0 }, // start disabled
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+      ScrollTrigger.create({
+        trigger: '#experience-chart', start: 'top 80%', once: true,
+        onEnter: () => chart.options.animation.duration = 2000 && chart.update()
+      });
+
+      // Smooth scroll on nav links
+      document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    }
+  </script>
+
+</body>
+</html>
