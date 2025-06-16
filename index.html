@@ -111,10 +111,6 @@
       background: rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem;
       backdrop-filter: blur(10px); transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .project-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
     .project-card h3 { font-weight: 700; margin-bottom: 0.5rem; }
     .project-card p { margin-bottom: 1rem; }
 
@@ -184,6 +180,7 @@
     }
     .project-card:hover {
       transform: rotateX(5deg) rotateY(-5deg) scale(1.02);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
     /* Hamburger menu */
     #hamburger {
@@ -520,36 +517,21 @@
   <script>
     // Programmatically ensure videos autoplay on mobile
     function attemptAutoplay() {
-      const vids = [
-        document.querySelector('.loading-video'),
-        document.querySelector('.hero-video-container video')
-      ];
-      vids.forEach(v => {
-        if (!v) return;
-        v.muted = true;
-        v.autoplay = true;
-        v.playsInline = true;
-        v.setAttribute('muted', '');
-        v.setAttribute('playsinline', '');
-        v.setAttribute('webkit-playsinline', '');
-        v.load();
-        v.play().catch(e => console.warn('Autoplay prevented for video.', e));
-        v.addEventListener('canplay', function onCanPlay() {
-          v.play().catch(e => console.warn('Autoplay prevented at canplay.', e));
-          v.removeEventListener('canplay', onCanPlay);
-        });
+      const v = document.querySelector('.hero-video-container video');
+      if (!v) return;
+      v.muted = true;
+      v.autoplay = true;
+      v.playsInline = true;
+      v.setAttribute('muted', '');
+      v.setAttribute('playsinline', '');
+      v.setAttribute('webkit-playsinline', '');
+      v.load();
+      v.play().catch(e => console.warn('Autoplay prevented for video.', e));
+      v.addEventListener('canplay', function onCanPlay() {
+        v.play().catch(e => console.warn('Autoplay prevented at canplay.', e));
+        v.removeEventListener('canplay', onCanPlay);
       });
     }
-    window.addEventListener('DOMContentLoaded', attemptAutoplay);
-    window.addEventListener('load', attemptAutoplay);
-    document.addEventListener('touchstart', function onFirstTouch() {
-      attemptAutoplay();
-      document.removeEventListener('touchstart', onFirstTouch);
-    });
-    // Immediately try autoplay on page load
-    attemptAutoplay();
-    // Retry autoplay when main content is revealed (~10s later)
-    setTimeout(attemptAutoplay, 10000);
   </script>
 
   <script>
