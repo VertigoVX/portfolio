@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Favicon -->
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <title>Tristan David | Developer Portfolio</title>
 
   <!-- Inter font -->
@@ -12,6 +10,9 @@
 
   <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-somehash" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
   <!-- GSAP + ScrollTrigger -->
   <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
@@ -72,11 +73,6 @@
     }
     h1 { font-size: 2.5rem; text-align: center; margin: 2rem 0; }
     h1 strong { font-weight: 800; }
-
-    /* =============== ANIMATED GREETING =============== */
-    #greeting { font-size: 2.5rem; text-align: center; margin: 2rem 0; overflow: hidden; }
-    #greeting .word { display: inline-block; opacity: 0; transform: translateY(50px); }
-    #greeting .word.bold { font-weight: 800; }
 
     /* =============== ABOUT ME =============== */
     #about .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 2rem; }
@@ -144,17 +140,9 @@
     <!-- HOME -->
     <section id="home">
       <div class="hero-video-container">
-        <video src="/videos/hero.mp4" autoplay muted loop playsinline preload="auto"></video>
+        <video src="/videos/hero.mp4" autoplay muted loop></video>
       </div>
-      <h1 id="greeting">
-        <span class="word">Hi,</span>
-        <span class="word bold">I'm</span>
-        <span class="word bold">Tristan,</span>
-        <span class="word">Welcome</span>
-        <span class="word">to</span>
-        <span class="word">my</span>
-        <span class="word">Portfolio</span>
-      </h1>
+      <h1><strong>Hi, I'm Tristan</strong>, Welcome to my Portfolio</h1>
     </section>
 
     <!-- ABOUT -->
