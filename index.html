@@ -33,8 +33,9 @@
       flex-direction: column; align-items: center; justify-content: center; z-index: 9999;
     }
     .loading-video {
-      width: 200px; /* smaller fixed size */
-      max-height: 150px;
+      width: 80%;
+      max-width: 200px;
+      height: auto;
       object-fit: contain;
     }
     .loading-bar {
@@ -111,6 +112,19 @@
     }
     #contact button:hover { background: rgba(255,255,255,0.2); }
 
+    /* Add mobile nav styling */
+    @media (max-width: 600px) {
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem;
+      }
+      nav ul li {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -119,7 +133,7 @@
 
   <!-- LOADING SCREEN -->
   <div id="loading-screen">
-    <video class="loading-video" src="/videos/loading.mp4" muted autoplay></video>
+    <video class="loading-video" src="/videos/loading.mp4" muted autoplay playsinline webkit-playsinline></video>
     <div class="loading-bar"></div>
   </div>
 
@@ -140,7 +154,7 @@
     <!-- HOME -->
     <section id="home">
       <div class="hero-video-container">
-        <video src="/videos/hero.mp4" autoplay muted loop></video>
+        <video src="/videos/hero.mp4" autoplay muted loop playsinline webkit-playsinline></video>
       </div>
       <h1><strong>Hi, I'm Tristan</strong>, Welcome to my Portfolio</h1>
     </section>
@@ -312,7 +326,7 @@
                     + `?subject=${subject}`
                     + `&body=Name:%20${name}%0D%0AEmail:%20${email}%0D%0A%0D%0A${message}`;
 
-        // open user’s email client
+        // open user's email client
         window.location.href = mailto;
       });
   </script>
