@@ -1,12 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Tristan David Portfolio</title>
-  </head>
-  <body class="bg-black text-white font-mono">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tristan David | Developer Portfolio</title>
+
+  <!-- Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* ================= GLOBAL STYLES ================= */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #000; color: #fff; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    a { color: #fff; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* =============== LOADING SCREEN =============== */
+    #loading-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex;
+      flex-direction: column; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .loading-video { max-width: 80%; }
+    .loading-bar {
+      width: 60%; height: 4px; border: 1px solid #fff; margin-top: 1rem; overflow: hidden;
+      position: relative;
+    }
+    .loading-bar::after {
+      content: '';
+      position: absolute; left: 0; top: 0; height: 100%; width: 0;
+      background: #fff;
+      animation: load 7s ease-in-out forwards;
+    }
+    @keyframes load { to { width: 100%; }}
+
+    /* =============== NAVBAR =============== */
+    nav { position: sticky; top: 0; width: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 10; }
+    nav ul { list-style: none; display: flex; justify-content: center; padding: 1rem; }
+    nav ul li { margin: 0 1rem; font-weight: 600; }
+    nav ul li a { font-size: 1rem; }
+
+    /* =============== SECTIONS =============== */
+    section { padding: 4rem 2rem; }
+    .hero-video-container { width: 100%; max-height: 60vh; overflow: hidden; }
+    .hero-video-container video { width: 100%; height: auto; }
+    h1 { font-size: 2.5rem; text-align: center; margin: 2rem 0; }
+    h1 strong { font-weight: 800; }
+
+    /* =============== ABOUT ME =============== */
+    #about .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 2rem; }
+    #about h2 { font-weight: 700; margin-bottom: 0.5rem; }
+    #about ul { list-style: none; padding-left: 0.5rem; }
+    #about ul li { font-weight: 400; }
+
+    /* =============== EXPERIENCE =============== */
+    #experience canvas { max-width: 800px; margin: 0 auto; display: block; }
+
+    /* =============== PROJECTS =============== */
+    #projects .projects-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 2rem; }
+    .project-card {
+      background: rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem;
+      backdrop-filter: blur(10px); transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .project-card h3 { font-weight: 700; margin-bottom: 0.5rem; }
+    .project-card p { margin-bottom: 1rem; }
+
+    /* =============== CONTACT FORM =============== */
+    #contact form { max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 1rem; }
+    #contact input, #contact textarea {
+      background: transparent; border: 1px solid #fff; padding: 0.75rem;
+      border-radius: 8px; color: #fff; font-size: 1rem;
+    }
+    #contact input:focus, #contact textarea:focus { outline: none; border-color: #00eaff; }
+    #contact button {
+      padding: 0.75rem; border: none; font-weight: 700; cursor: pointer;
+      border-radius: 8px; backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.1);
+      transition: background 0.3s ease;
+    }
+    #contact button:hover { background: rgba(255,255,255,0.2); }
+
+  </style>
+</head>
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen">
+    <video class="loading-video" src="/videos/loading.mp4" muted autoplay></video>
+    <div class="loading-bar"></div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="main-content" style="display:none;">
+
+    <!-- NAVBAR -->
+    <nav>
+      <ul>
+        <li><a href="#home">Tristan David</a></li>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#projects">My Projects</a></li>
+        <li><a href="#experience">My Experience</a></li>
+        <li><a href="#contact">Contact Me</a></li>
+      </ul>
+    </nav>
+
+    <!-- HOME -->
+    <section id="home">
+      <div class="hero-video-container">
+        <video src="/videos/hero.mp4" autoplay muted loop></video>
+      </div>
+      <h1><strong>Hi, I'm Tristan</strong>, Welcome to my Portfolio</h1>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="grid">
+        <div>
+          <h2>Contact</h2>
+          <ul>
+            <li>D.O.B: 15/03/02</li>
+            <li>South Africa</li>
+            <li>tristan.david1503@icloud.com</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Soft Skills</h2>
+          <ul>
+            <li>Time Management</li>
+            <li>Creativity</li>
+            <li>Analytical Thinking</li>
+            <li>Permanently Optimistic</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Languages (Spoken)</h2>
+          <ul>
+            <li>English — Native</li>
+            <li>Afrikaans — Professional Level</li>
+            <li>Japanese — Intermediate Level</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Languages (Programming)</h2>
+          <ul>
+            <li>Python</li>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JavaScript</li>
+            <li>Magik</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Interests</h2>
+          <ul>
+            <li>Video Games</li>
+            <li>Music</li>
+            <li>Languages</li>
+            <li>Travel</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Social</h2>
+          <ul style="display:flex; gap:1rem; align-items:center;">
+            <li><img src="/icons/instagram.svg" alt="Instagram" width="24"/><a href="https://instagram.com/tristanisaway" target="_blank">tristanisaway</a></li>
+            <li><img src="/icons/github.svg" alt="GitHub" width="24"/><a href="https://github.com/VertigoVX" target="_blank">VertigoVX</a></li>
+            <li><img src="/icons/linkedin.svg" alt="LinkedIn" width="24"/><a href="https://linkedin.com/in/tristan-david" target="_blank">Tristan David</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <h2 style="text-align:center; margin-bottom:2rem;">My Projects</h2>
+      <div class="projects-grid">
+        <div class="project-card">
+          <h3>Chatbot</h3>
+          <p>This is a simple chatbot application built using Python.</p>
+          <a href="https://github.com/VertigoVX/chatbot" target="_blank">View on GitHub</a>
+        </div>
+        <div class="project-card">
+          <h3>NFT Marketplace</h3>
+          <p>Demonstration on how decentralized technologies can be used to build trustless and transparent marketplaces for digital assets.</p>
+          <a href="https://github.com/VertigoVX/nft-marketplace" target="_blank">View on GitHub</a>
+        </div>
+        <div class="project-card">
+          <h3>Crypto Wallet Generator</h3>
+          <p>Generate and manage cryptocurrency wallets for Ethereum and Bitcoin.</p>
+          <a href="https://github.com/VertigoVX/crypto-wallet-generator" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+      <p style="text-align:center; margin-top:2rem;"><a href="https://github.com/VertigoVX" target="_blank">View more on my GitHub</a></p>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <h2 style="text-align:center; margin-bottom:2rem;">Work Experience & Growth</h2>
+      <canvas id="experience-chart" width="800" height="400"></canvas>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <h2 style="text-align:center; margin-bottom:2rem;">Contact Me</h2>
+      <form>
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Email Address" required />
+        <input type="text" name="subject" placeholder="Subject" />
+        <textarea name="message" rows="5" placeholder="Message"></textarea>
+        <button type="submit">Send me an Email</button>
+      </form>
+    </section>
+
+  </div>
+
+  <script>
+    // Hide loading and show main after 7s
+    setTimeout(() => {
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      initAnimations();
+    }, 7000);
+
+    function initAnimations() {
+      gsap.registerPlugin(ScrollTrigger);
+      // Fade in sections
+      gsap.utils.toArray('section').forEach(sec => {
+        gsap.from(sec, {
+          opacity: 0, y: 50, duration: 1,
+          scrollTrigger: { trigger: sec, start: 'top 80%' }
+        });
+      });
+
+      // Chart animation on scroll
+      const ctx = document.getElementById('experience-chart').getContext('2d');
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['PA to Investment Banker', 'Junior Software Developer', 'Junior Full-Stack Developer'],
+          datasets: [{
+            label: 'Growth',
+            data: [10, 50, 100],
+            borderWidth: 3,
+            fill: false,
+            tension: 0.4,
+            borderColor: '#00eaff'
+          }]
+        },
+        options: {
+          animation: { duration: 0 }, // start disabled
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+      ScrollTrigger.create({
+        trigger: '#experience-chart', start: 'top 80%', once: true,
+        onEnter: () => chart.options.animation.duration = 2000 && chart.update()
+      });
+
+      // Smooth scroll on nav links
+      document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    }
+  </script>
+
+</body>
 </html>
