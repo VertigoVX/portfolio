@@ -45,6 +45,13 @@
     }
     @keyframes load { to { width: 100%; }}
 
+    /* =============== SPOTLIGHT =============== */
+    #spotlight {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none;
+      background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,255,0.4) 0%, transparent 200px);
+      mix-blend-mode: screen; transition: background-position 0.2s ease-out; z-index: 999;
+    }
+
     /* =============== NAVBAR =============== */
     nav { position: sticky; top: 0; width: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 10; }
     nav ul { list-style: none; display: flex; justify-content: center; padding: 1rem; }
@@ -103,6 +110,8 @@
   </style>
 </head>
 <body>
+
+  <div id="spotlight"></div>
 
   <!-- LOADING SCREEN -->
   <div id="loading-screen">
@@ -299,6 +308,49 @@
         // open user’s email client
         window.location.href = mailto;
       });
+  </script>
+
+  <script>
+    const vid     = document.querySelector('.hero-video-container video');
+    const spot    = document.getElementById('spotlight');
+    const navbar  = document.querySelector('nav');
+    const heading = document.querySelector('h1');
+
+    const navBox = navbar.getBoundingClientRect();
+    const hdrBox = heading.getBoundingClientRect();
+
+    const keyframes = [
+      { time: 1.0, x: navBox.left + navBox.width/2, y: navBox.top + navBox.height/2 },
+      { time: 3.5, x: hdrBox.left + hdrBox.width/2, y: hdrBox.top + hdrBox.height/2 },
+    ];
+
+    vid.addEventListener('timeupdate',()=>{
+      const t = vid.currentTime;
+      let prev = keyframes[0], next = keyframes[keyframes.length-1];
+      for (let k of keyframes) {
+        if (k.time <= t) prev = k;
+        if (k.time >  t) { next = k; break; }
+      }
+    const span = next.time - prev.time || 1;
+    const frac = Math.min(1, Math.max(0, (t - prev.time) / span));
+    const x = prev.x + (next.x - prev.x) * frac;
+    const y = prev.y + (next.y - prev.y) * frac;
+    spot.style.setProperty('--x', `${x}px`);
+    spot.style.setProperty('--y', `${y}px`);
+  }); 
+  </script>
+
+  <!-- Spotlight -->
+  <script>
+    gsap.to("#spotlight", {
+    scrollTrigger: {
+      trigger: "#home",
+      start: "top top",
+      onEnter:   () => gsap.to(spot, { opacity:1 }),
+      onLeave:   () => gsap.to(spot, { opacity:0 }),
+      once:      false
+    }
+  }); 
   </script>
 
 </body>
