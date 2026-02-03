@@ -14,62 +14,45 @@
   <!-- Favicon -->
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
-  <!-- GSAP + ScrollTrigger -->
+  <!-- GSAP + ScrollTrigger + ScrollToPlugin -->
   <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollToPlugin.min.js"></script>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     /* ================= GLOBAL STYLES ================= */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; background: #000; color: #fff; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-    a { color: #fff; text-decoration: none; }
+    :root {
+      --bg-primary: #000;
+      --bg-secondary: rgba(255,255,255,0.1);
+      --text-primary: #fff;
+      --text-secondary: rgba(255,255,255,0.8);
+      --accent: #00eaff;
+      --card-bg: rgba(255,255,255,0.1);
+      --border-color: rgba(255,255,255,0.2);
+    }
+    [data-theme="light"] {
+      --bg-primary: #f5f5f5;
+      --bg-secondary: rgba(0,0,0,0.05);
+      --text-primary: #000;
+      --text-secondary: rgba(0,0,0,0.7);
+      --accent: #0066cc;
+      --card-bg: rgba(255,255,255,0.9);
+      --border-color: rgba(0,0,0,0.1);
+    }
+    html, body { 
+      height: 100%; 
+      background: var(--bg-primary); 
+      color: var(--text-primary); 
+      font-family: 'Inter', sans-serif; 
+      scroll-behavior: smooth;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    a { color: var(--text-primary); text-decoration: none; transition: color 0.3s ease; }
     img { max-width: 100%; display: block; }
 
-    /* =============== LOADING SCREEN =============== */
-    #loading-screen {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex;
-      flex-direction: column; align-items: center; justify-content: center; z-index: 9999;
-    }
-    .loading-image {
-      width: 50%;
-      max-width: 400px;
-      height: auto;
-      object-fit: contain;
-    }
-    .loading-bar {
-      width: 60%; height: 4px; border: 1px solid #fff; margin-top: 1rem; overflow: hidden;
-      position: relative;
-    }
-    .loading-bar::after {
-      content: '';
-      position: absolute; left: 0; top: 0; height: 100%; width: 0;
-      background: #fff;
-      animation: load 10s ease-in-out forwards;
-    }
-    /* Loading text indicator */
-    #loading-text {
-      margin-top: 1rem;
-      font-size: 1rem;
-      color: #fff;
-    }
-    /* Continue button styling */
-    #continue-button {
-      display: none;
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      border: 1px solid #fff;
-      background: transparent;
-      color: #fff;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    #continue-button:hover {
-      background: rgba(255,255,255,0.2);
-    }
-    @keyframes load { to { width: 100%; }}
 
     /* =============== SPOTLIGHT =============== */
     #spotlight {
@@ -78,11 +61,35 @@
       mix-blend-mode: screen; transition: background-position 0.2s ease-out; z-index: 999;
     }
 
+    /* =============== THEME TOGGLE =============== */
+    #theme-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 10001;
+      width: 50px; height: 50px; border-radius: 50%;
+      background: var(--card-bg); border: 2px solid var(--border-color);
+      color: var(--text-primary); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    #theme-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
     /* =============== NAVBAR =============== */
-    nav { position: sticky; top: 0; width: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 10; }
+    nav { 
+      position: sticky; top: 0; width: 100%; 
+      background: rgba(0,0,0,0.8); 
+      backdrop-filter: blur(5px); z-index: 10;
+      transition: background 0.3s ease;
+    }
+    [data-theme="light"] nav {
+      background: rgba(255,255,255,0.9);
+    }
     nav ul { list-style: none; display: flex; justify-content: center; padding: 1rem; }
     nav ul li { margin: 0 1rem; font-weight: 600; }
-    nav ul li a { font-size: 1rem; }
+    nav ul li a { font-size: 1rem; transition: color 0.3s ease; }
 
     /* =============== SECTIONS =============== */
     section { padding: 4rem 2rem; }
@@ -102,40 +109,246 @@
     #about ul { list-style: none; padding-left: 0.5rem; }
     #about ul li { font-weight: 400; }
 
+    /* =============== SKILLS VISUALIZATION =============== */
+    #skills {
+      padding: 4rem 2rem;
+    }
+    .skills-container {
+      max-width: 1000px; margin: 0 auto;
+    }
+    .skill-category {
+      margin-bottom: 3rem;
+    }
+    .skill-category h3 {
+      font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--accent);
+    }
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1.5rem;
+    }
+    .skill-item {
+      background: var(--card-bg); border-radius: 15px; padding: 1.5rem;
+      text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid var(--border-color); cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .skill-item:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 15px 30px rgba(0,234,255,0.3);
+      border-color: var(--accent);
+    }
+    .skill-item i {
+      font-size: 2.5rem; color: var(--accent); transition: transform 0.3s ease;
+    }
+    .skill-item:hover i {
+      transform: scale(1.2) rotate(5deg);
+    }
+    .skill-item span {
+      font-weight: 600; font-size: 0.9rem;
+    }
+    .skill-level {
+      width: 100%; height: 4px; background: var(--bg-secondary);
+      border-radius: 2px; margin-top: 0.5rem; overflow: hidden;
+    }
+    .skill-level-bar {
+      height: 100%; background: linear-gradient(90deg, var(--accent), #00b8cc);
+      border-radius: 2px; transition: width 1s ease;
+      width: 0;
+    }
+
+    /* =============== TIMELINE =============== */
+    .timeline-container {
+      max-width: 900px; margin: 3rem auto; position: relative;
+      padding: 2rem 0;
+    }
+    .timeline-line {
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 3px; background: var(--border-color);
+      transform: translateX(-50%);
+    }
+    [data-theme="light"] .timeline-line {
+      background: rgba(0,0,0,0.2);
+    }
+    .timeline-item {
+      position: relative; margin-bottom: 4rem; display: flex;
+      align-items: center;
+    }
+    .timeline-item:nth-of-type(odd) {
+      flex-direction: row;
+    }
+    .timeline-item:nth-of-type(even) {
+      flex-direction: row-reverse;
+    }
+    .timeline-content {
+      width: 45%; background: var(--card-bg);
+      border-radius: 15px; padding: 2rem;
+      border: 1px solid var(--border-color);
+      transition: all 0.4s ease;
+      position: relative; z-index: 1;
+    }
+    .timeline-item:nth-of-type(odd) .timeline-content {
+      transform: translateX(-50px);
+      opacity: 0;
+    }
+    .timeline-item:nth-of-type(even) .timeline-content {
+      transform: translateX(50px);
+      opacity: 0;
+    }
+    .timeline-content.visible {
+      opacity: 1 !important; 
+      transform: translateX(0) !important;
+    }
+    .timeline-content.visible:hover {
+      transform: translateX(0) scale(1.02) !important;
+      box-shadow: 0 10px 30px rgba(0,234,255,0.2);
+      border-color: var(--accent);
+    }
+    /* Fallback: Show content after page load if JS hasn't animated it */
+    @keyframes timelineFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .timeline-container.loaded .timeline-content:not(.visible) {
+      animation: timelineFadeIn 0.5s ease forwards;
+      transform: translateX(0) !important;
+    }
+    .timeline-dot {
+      position: absolute; left: 50%; width: 20px; height: 20px;
+      background: var(--accent); border-radius: 50%;
+      transform: translateX(-50%);
+      border: 4px solid var(--bg-primary);
+      z-index: 2; transition: all 0.3s ease;
+    }
+    .timeline-dot:hover {
+      transform: translateX(-50%) scale(1.5);
+      box-shadow: 0 0 20px var(--accent);
+    }
+    .timeline-date {
+      font-weight: 700; color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .timeline-title {
+      font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;
+    }
+    .timeline-description {
+      color: var(--text-secondary); line-height: 1.6;
+    }
+    @media (max-width: 768px) {
+      .timeline-line { left: 30px; }
+      .timeline-item { flex-direction: row !important; }
+      .timeline-content { width: calc(100% - 80px); margin-left: 60px; }
+      .timeline-dot { left: 30px; }
+      .timeline-item:nth-child(odd) .timeline-content,
+      .timeline-item:nth-child(even) .timeline-content {
+        transform: translateX(0);
+      }
+    }
+
     /* =============== EXPERIENCE =============== */
     #experience canvas { max-width: 800px; margin: 0 auto; display: block; }
+    #experience canvas {
+      filter: drop-shadow(0 10px 20px rgba(0,234,255,0.2));
+      transition: filter 0.3s ease;
+    }
+    #experience canvas:hover {
+      filter: drop-shadow(0 15px 30px rgba(0,234,255,0.4));
+    }
 
     /* =============== PROJECTS =============== */
     #projects .projects-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 2rem; }
     .project-card {
-      background: rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem;
-      backdrop-filter: blur(10px); transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: var(--card-bg); border-radius: 20px; padding: 1.5rem;
+      backdrop-filter: blur(10px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; border: 1px solid var(--border-color);
+      cursor: pointer;
     }
-    .project-card h3 { font-weight: 700; margin-bottom: 0.5rem; }
-    .project-card p { margin-bottom: 1rem; }
+    .project-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,234,255,0.2);
+      border-color: var(--accent);
+    }
+    .project-thumbnail {
+      width: 100%; height: 200px; object-fit: cover; border-radius: 12px;
+      margin-bottom: 1rem; background: var(--bg-secondary);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary); font-size: 3rem;
+      transition: all 0.3s ease;
+    }
+    .project-card:hover .project-thumbnail {
+      transform: scale(1.05);
+      color: var(--accent);
+    }
+    .project-card h3 { font-weight: 700; margin-bottom: 0.5rem; transition: color 0.3s ease; }
+    .project-card:hover h3 { color: var(--accent); }
+    .project-card p { margin-bottom: 1rem; flex-grow: 1; }
+    
+    /* Case Study Modal */
+    .case-study-modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); z-index: 10000; overflow-y: auto;
+      backdrop-filter: blur(5px);
+    }
+    [data-theme="light"] .case-study-modal {
+      background: rgba(0,0,0,0.7);
+    }
+    .case-study-content {
+      max-width: 900px; margin: 2rem auto; padding: 2rem;
+      background: var(--card-bg); border-radius: 20px;
+      border: 1px solid var(--border-color);
+    }
+    .case-study-header {
+      display: flex; justify-content: space-between; align-items: start;
+      margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border-color);
+    }
+    .close-modal {
+      background: transparent; border: none; color: var(--text-primary);
+      font-size: 2rem; cursor: pointer; transition: transform 0.3s ease;
+      width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    }
+    .close-modal:hover { transform: rotate(90deg); color: var(--accent); }
+    .case-study-section {
+      margin-bottom: 2rem;
+    }
+    .case-study-section h3 {
+      color: var(--accent); margin-bottom: 1rem; font-size: 1.5rem;
+    }
+    .tech-tags {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;
+    }
+    .tech-tag {
+      padding: 0.5rem 1rem; background: var(--bg-secondary);
+      border-radius: 20px; font-size: 0.9rem; border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+    .tech-tag:hover {
+      background: var(--accent); color: var(--bg-primary); transform: scale(1.05);
+    }
 
     /* =============== CONTACT FORM =============== */
     #contact form { max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 1rem; }
     #contact input, #contact textarea {
-      background: transparent; border: 1px solid #fff; padding: 0.75rem;
-      border-radius: 8px; color: #fff; font-size: 1rem;
+      background: transparent; border: 1px solid var(--border-color); padding: 0.75rem;
+      border-radius: 8px; color: var(--text-primary); font-size: 1rem;
+      transition: all 0.3s ease;
     }
-    #contact input:focus, #contact textarea:focus { outline: none; border-color: #00eaff; }
+    #contact input:focus, #contact textarea:focus { 
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(0,234,255,0.3);
+    }
     #contact button {
       padding: 0.75rem; border: none; font-weight: 700; cursor: pointer;
       border-radius: 8px; backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.1);
-      transition: background 0.3s ease;
+      background: var(--card-bg); color: var(--text-primary);
+      transition: all 0.3s ease; border: 1px solid var(--border-color);
     }
-    #contact button:hover { background: rgba(255,255,255,0.2); }
+    #contact button:hover { 
+      background: var(--accent); 
+      color: var(--bg-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,234,255,0.3);
+    }
 
     /* Add mobile nav styling */
     @media (max-width: 600px) {
-      /* Mobile loading image sizing */
-      .loading-image {
-        width: 80%;
-        max-width: 200px;
-      }
       nav ul {
         flex-direction: column;
         align-items: center;
@@ -162,25 +375,13 @@
     /* Scroll progress bar */
     #scroll-progress {
       position: fixed; top: 0; left: 0; height: 4px;
-      background: #00eaff; width: 0%; z-index: 10000;
+      background: var(--accent); width: 0%; z-index: 10000;
       transition: width 0.1s ease-out;
     }
     /* Active nav link */
     nav ul li a.active {
-      border-bottom: 2px solid #00eaff;
-      color: #00eaff;
-    }
-    /* 3D card hover */
-    .projects-grid {
-      perspective: 1000px;
-    }
-    .project-card {
-      transform-style: preserve-3d;
-      transition: transform 0.3s ease;
-    }
-    .project-card:hover {
-      transform: rotateX(5deg) rotateY(-5deg) scale(1.02);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border-bottom: 2px solid var(--accent);
+      color: var(--accent);
     }
     /* Hamburger menu */
     #hamburger {
@@ -243,17 +444,12 @@
 
   <div id="scroll-progress"></div>
   <div id="spotlight"></div>
-
-  <!-- LOADING SCREEN -->
-  <div id="loading-screen">
-    <img class="loading-image" src="/images/loading.png" alt="Loading" />
-    <div class="loading-bar"></div>
-    <p id="loading-text">Loading 0%</p>
-    <button id="continue-button">Press ESC or Click to Continue</button>
-  </div>
+  
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
 
   <!-- MAIN CONTENT -->
-  <div id="main-content" style="display:none;">
+  <div id="main-content">
 
     <!-- NAVBAR -->
     <nav>
@@ -261,7 +457,9 @@
       <ul>
         <li><a href="#home">Tristan David</a></li>
         <li><a href="#about">About Me</a></li>
+        <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">My Projects</a></li>
+        <li><a href="#work-experience">Work Experience</a></li>
         <li><a href="#experience">My Experience</a></li>
         <li><a href="#contact">Contact Me</a></li>
       </ul>
@@ -272,7 +470,7 @@
       <div class="hero-video-container">
         <video src="/videos/hero.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
       </div>
-      <h1><span class="typing"><strong>Hi, I'm Tristan</strong>, Welcome to my Portfolio</span></h1>
+      <h1><span class="typing"><strong>Junior Full Stack Engineer</strong> | Python • React • Next.js</span></h1>
     </section>
 
     <!-- ABOUT -->
@@ -328,21 +526,102 @@
       </div>
     </section>
 
+    <!-- SKILLS VISUALIZATION -->
+    <section id="skills">
+      <h2 style="text-align:center; margin-bottom:3rem;">Tech Stack</h2>
+      <div class="skills-container">
+        <div class="skill-category">
+          <h3>Frontend</h3>
+          <div class="skills-grid">
+            <div class="skill-item" data-skill="React">
+              <i class="fab fa-react"></i>
+              <span>React</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="90"></div></div>
+            </div>
+            <div class="skill-item" data-skill="Next.js">
+              <i class="fab fa-js"></i>
+              <span>Next.js</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="85"></div></div>
+            </div>
+            <div class="skill-item" data-skill="HTML5">
+              <i class="fab fa-html5"></i>
+              <span>HTML5</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="95"></div></div>
+            </div>
+            <div class="skill-item" data-skill="CSS3">
+              <i class="fab fa-css3-alt"></i>
+              <span>CSS3</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="90"></div></div>
+            </div>
+            <div class="skill-item" data-skill="JavaScript">
+              <i class="fab fa-js"></i>
+              <span>JavaScript</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="88"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>Backend</h3>
+          <div class="skills-grid">
+            <div class="skill-item" data-skill="Python">
+              <i class="fab fa-python"></i>
+              <span>Python</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="92"></div></div>
+            </div>
+            <div class="skill-item" data-skill="Node.js">
+              <i class="fab fa-node-js"></i>
+              <span>Node.js</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="80"></div></div>
+            </div>
+            <div class="skill-item" data-skill="REST APIs">
+              <i class="fas fa-server"></i>
+              <span>REST APIs</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="85"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>Tools & Others</h3>
+          <div class="skills-grid">
+            <div class="skill-item" data-skill="Git">
+              <i class="fab fa-git-alt"></i>
+              <span>Git</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="90"></div></div>
+            </div>
+            <div class="skill-item" data-skill="GitHub">
+              <i class="fab fa-github"></i>
+              <span>GitHub</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="92"></div></div>
+            </div>
+            <div class="skill-item" data-skill="Docker">
+              <i class="fab fa-docker"></i>
+              <span>Docker</span>
+              <div class="skill-level"><div class="skill-level-bar" data-level="75"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- PROJECTS -->
     <section id="projects">
       <h2 style="text-align:center; margin-bottom:2rem;">My Projects</h2>
       <div class="projects-grid">
         <div class="project-card">
+          <div class="project-thumbnail">🤖</div>
           <h3>Chatbot</h3>
           <p>This is a simple chatbot application built using Python.</p>
           <a href="https://github.com/VertigoVX/chatbot" target="_blank">View on GitHub</a>
         </div>
-        <div class="project-card">
+        <div class="project-card" onclick="openCaseStudy()">
+          <div class="project-thumbnail">🖼️</div>
           <h3>NFT Marketplace</h3>
           <p>Demonstration on how decentralized technologies can be used to build trustless and transparent marketplaces for digital assets.</p>
-          <a href="https://github.com/VertigoVX/nft-marketplace" target="_blank">View on GitHub</a>
+          <a href="https://github.com/VertigoVX/nft-marketplace" target="_blank" onclick="event.stopPropagation()">View on GitHub</a>
+          <button style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--accent); color: var(--bg-primary); border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="event.stopPropagation(); openCaseStudy();">View Case Study</button>
         </div>
         <div class="project-card">
+          <div class="project-thumbnail">💼</div>
           <h3>Crypto Wallet Generator</h3>
           <p>Generate and manage cryptocurrency wallets for Ethereum and Bitcoin.</p>
           <a href="https://github.com/VertigoVX/crypto-wallet-generator" target="_blank">View on GitHub</a>
@@ -351,9 +630,56 @@
       <p style="text-align:center; margin-top:2rem;"><a href="https://github.com/VertigoVX" target="_blank">View more on my GitHub</a></p>
     </section>
 
+    <!-- WORK EXPERIENCE TIMELINE -->
+    <section id="work-experience">
+      <h2 style="text-align:center; margin-bottom:3rem;">Work Experience</h2>
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">2024 - Present</div>
+            <div class="timeline-title">Junior Full-Stack Developer</div>
+            <div class="timeline-description">
+              Building full-stack applications using modern web technologies including Python, React, and Next.js. Working on scalable solutions and collaborating with cross-functional teams.
+              <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                <li>Developed responsive web applications with React and Next.js</li>
+                <li>Built RESTful APIs using Python frameworks</li>
+                <li>Implemented database solutions and data management systems</li>
+                <li>Collaborated using Git/GitHub for version control</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">2023 - 2024</div>
+            <div class="timeline-title">Junior Software Developer</div>
+            <div class="timeline-description">
+              Focused on developing software solutions and learning best practices in software engineering. Gained experience in various programming languages and development methodologies. Worked on multiple projects ranging from web applications to automation tools.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">2021 - 2023</div>
+            <div class="timeline-title">PA to Investment Banker</div>
+            <div class="timeline-description">
+              Provided administrative support and managed various tasks in a fast-paced financial environment. Developed strong organizational and time management skills. This role helped build a foundation for attention to detail and professional communication.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- EXPERIENCE -->
     <section id="experience">
-      <h2 style="text-align:center; margin-bottom:2rem;">Work Experience & Growth</h2>
+      <h2 style="text-align:center; margin-bottom:2rem;">Experience & Growth</h2>
       <canvas id="experience-chart" width="800" height="400"></canvas>
     </section>
 
@@ -371,49 +697,147 @@
 
   </div>
 
-  <script>
-    // Loading progress indicator
-    const loadingDuration = 10000;
-    const loadingTextElem = document.getElementById('loading-text');
-    const startTime = Date.now();
-    const loaderInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min(100, Math.floor((elapsed / loadingDuration) * 100));
-      if (loadingTextElem) loadingTextElem.textContent = `Loading ${percent}%`;
-      if (elapsed >= loadingDuration) {
-        clearInterval(loaderInterval);
-        const btn = document.getElementById('continue-button');
-        if (btn) btn.style.display = 'inline-block';
-      }
-    }, 100);
+  <!-- Case Study Modal -->
+  <div id="case-study-modal" class="case-study-modal">
+    <div class="case-study-content">
+      <div class="case-study-header">
+        <h2 style="font-size: 2rem; color: var(--accent);">NFT Marketplace - Case Study</h2>
+        <button class="close-modal" onclick="closeCaseStudy()">&times;</button>
+      </div>
+      
+      <div class="case-study-section">
+        <h3>Overview</h3>
+        <p>A decentralized NFT marketplace built to demonstrate how blockchain technology can create trustless and transparent marketplaces for digital assets. This project showcases full-stack development skills with a focus on Web3 integration.</p>
+      </div>
 
-    // Manual proceed from loading screen on button click or Escape key
-    function proceedFromLoading() {
-      clearInterval(loaderInterval);
-      document.getElementById('loading-screen').style.display = 'none';
-      document.getElementById('main-content').style.display = 'block';
+      <div class="case-study-section">
+        <h3>Challenge</h3>
+        <p>Traditional digital asset marketplaces rely on centralized platforms that charge high fees and maintain control over user transactions. The goal was to create a decentralized alternative that gives users full ownership and control of their digital assets.</p>
+      </div>
+
+      <div class="case-study-section">
+        <h3>Solution</h3>
+        <p>Developed a blockchain-based NFT marketplace using smart contracts for secure, transparent transactions. The platform allows users to mint, buy, sell, and trade NFTs without intermediaries, reducing costs and increasing trust through blockchain verification.</p>
+      </div>
+
+      <div class="case-study-section">
+        <h3>Technologies Used</h3>
+        <div class="tech-tags">
+          <span class="tech-tag">Solidity</span>
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">Next.js</span>
+          <span class="tech-tag">Web3.js</span>
+          <span class="tech-tag">Ethereum</span>
+          <span class="tech-tag">IPFS</span>
+          <span class="tech-tag">TypeScript</span>
+          <span class="tech-tag">Tailwind CSS</span>
+        </div>
+      </div>
+
+      <div class="case-study-section">
+        <h3>Key Features</h3>
+        <ul style="line-height: 2; padding-left: 1.5rem;">
+          <li>Smart contract-based NFT minting and trading</li>
+          <li>Decentralized storage using IPFS for metadata</li>
+          <li>Wallet integration (MetaMask, WalletConnect)</li>
+          <li>Real-time transaction tracking</li>
+          <li>Responsive design for all devices</li>
+          <li>Gas optimization for cost-effective transactions</li>
+        </ul>
+      </div>
+
+      <div class="case-study-section">
+        <h3>Results</h3>
+        <p>Successfully created a fully functional NFT marketplace that demonstrates proficiency in Web3 development, smart contract programming, and decentralized application architecture. The project showcases the ability to integrate complex blockchain technologies with modern web development practices.</p>
+      </div>
+
+      <div class="case-study-section">
+        <a href="https://github.com/VertigoVX/nft-marketplace" target="_blank" style="display: inline-block; padding: 1rem 2rem; background: var(--accent); color: var(--bg-primary); border-radius: 8px; font-weight: 600; margin-top: 1rem;">View on GitHub →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize animations on page load
+    window.addEventListener('DOMContentLoaded', () => {
       initAnimations();
-      if (typeof attemptAutoplay === 'function') attemptAutoplay();
-    }
-    const continueBtn = document.getElementById('continue-button');
-    if (continueBtn) continueBtn.addEventListener('click', proceedFromLoading);
-    document.addEventListener('keydown', e => {
-      const btn = document.getElementById('continue-button');
-      if (e.key === 'Escape' && btn && btn.style.display !== 'none') proceedFromLoading();
+      attemptAutoplay();
+      // Mark timeline as loaded for CSS fallback
+      const timelineContainer = document.querySelector('.timeline-container');
+      if (timelineContainer) {
+        setTimeout(() => {
+          timelineContainer.classList.add('loaded');
+        }, 100);
+      }
     });
 
     function initAnimations() {
-      gsap.registerPlugin(ScrollTrigger);
-      // Fade in sections
-      gsap.utils.toArray('section').forEach(sec => {
+      gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+      // Enhanced fade in sections with stagger
+      gsap.utils.toArray('section').forEach((sec, i) => {
         gsap.from(sec, {
           opacity: 0, y: 50, duration: 1,
-          scrollTrigger: { trigger: sec, start: 'top 80%' }
+          scrollTrigger: { trigger: sec, start: 'top 80%' },
+          delay: i * 0.1
+        });
+      });
+
+      // Animate skill bars on scroll
+      const skillBars = document.querySelectorAll('.skill-level-bar');
+      skillBars.forEach(bar => {
+        const level = bar.getAttribute('data-level');
+        ScrollTrigger.create({
+          trigger: bar.closest('.skill-category'),
+          start: 'top 80%',
+          once: true,
+          onEnter: () => {
+            gsap.to(bar, {
+              width: level + '%',
+              duration: 1.5,
+              ease: 'power2.out'
+            });
+          }
+        });
+      });
+
+      // Animate timeline items - ensure they're visible on scroll
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      timelineItems.forEach((timelineItem, i) => {
+        const content = timelineItem.querySelector('.timeline-content');
+        if (!content) return;
+        
+        // Make content visible immediately if already in viewport (fallback)
+        const rect = timelineItem.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          content.style.opacity = '1';
+          content.style.transform = 'translateX(0)';
+          content.classList.add('visible');
+        }
+        
+        ScrollTrigger.create({
+          trigger: timelineItem,
+          start: 'top 85%',
+          once: true,
+          onEnter: () => {
+            gsap.to(content, {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              delay: i * 0.15,
+              ease: 'power2.out',
+              onComplete: () => {
+                content.classList.add('visible');
+              }
+            });
+          }
         });
       });
 
       // Chart animation on scroll
       const ctx = document.getElementById('experience-chart').getContext('2d');
+      const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00eaff';
+      const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#fff';
+      
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -424,27 +848,57 @@
             borderWidth: 3,
             fill: false,
             tension: 0.4,
-            borderColor: '#00eaff'
+            borderColor: accentColor,
+            pointBackgroundColor: accentColor,
+            pointBorderColor: accentColor,
+            pointHoverBackgroundColor: textColor,
+            pointHoverBorderColor: accentColor
           }]
         },
         options: {
           responsive: true,
           animation: { duration: 0 }, // start disabled
-          scales: { y: { beginAtZero: true } }
+          scales: { 
+            y: { 
+              beginAtZero: true,
+              ticks: { color: textColor },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+              ticks: { color: textColor },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: { color: textColor }
+            }
+          }
         }
       });
+      
+      // Update chart colors on theme change
+      const updateChartColors = () => {
+        const newAccent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00eaff';
+        const newText = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#fff';
+        chart.data.datasets[0].borderColor = newAccent;
+        chart.data.datasets[0].pointBackgroundColor = newAccent;
+        chart.data.datasets[0].pointBorderColor = newAccent;
+        chart.options.scales.y.ticks.color = newText;
+        chart.options.scales.x.ticks.color = newText;
+        chart.options.plugins.legend.labels.color = newText;
+        chart.update();
+      };
+      
+      // Listen for theme changes
+      const observer = new MutationObserver(updateChartColors);
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      
       ScrollTrigger.create({
         trigger: '#experience-chart', start: 'top 80%', once: true,
         onEnter: () => chart.options.animation.duration = 2000 && chart.update()
       });
 
-      // Smooth scroll on nav links
-      document.querySelectorAll('nav a').forEach(link => {
-        link.addEventListener('click', e => {
-          e.preventDefault();
-          document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-        });
-      });
     }
   </script>
 
@@ -561,6 +1015,116 @@
     const navElem = document.querySelector('nav');
     if (hamburger && navElem) {
       hamburger.addEventListener('click', () => navElem.classList.toggle('open'));
+    }
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    
+    // Load saved theme or default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+      
+      // Add subtle animation
+      gsap.to(themeToggle, {
+        rotation: 360,
+        duration: 0.5,
+        ease: 'power2.out'
+      });
+    });
+
+    function updateThemeIcon(theme) {
+      themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+    }
+
+    // Case Study Modal Functions
+    function openCaseStudy() {
+      const modal = document.getElementById('case-study-modal');
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      gsap.from(modal.querySelector('.case-study-content'), {
+        opacity: 0,
+        y: 50,
+        scale: 0.9,
+        duration: 0.4,
+        ease: 'power2.out'
+      });
+    }
+
+    function closeCaseStudy() {
+      const modal = document.getElementById('case-study-modal');
+      gsap.to(modal.querySelector('.case-study-content'), {
+        opacity: 0,
+        y: -50,
+        scale: 0.9,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+    }
+
+    // Close modal on outside click
+    document.getElementById('case-study-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'case-study-modal') {
+        closeCaseStudy();
+      }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('case-study-modal');
+        if (modal.style.display === 'block') {
+          closeCaseStudy();
+        }
+      }
+    });
+
+    // Enhanced smooth scrolling with offset for sticky nav
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const navHeight = document.querySelector('nav').offsetHeight;
+          const targetPosition = target.offsetTop - navHeight;
+          
+          gsap.to(window, {
+            duration: 1,
+            scrollTo: { y: targetPosition, offsetY: navHeight },
+            ease: 'power2.inOut'
+          });
+        }
+      });
+    });
+
+    // Add parallax effect to hero video
+    const heroVideo = document.querySelector('.hero-video-container video');
+    if (heroVideo) {
+      ScrollTrigger.create({
+        trigger: '#home',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          gsap.set(heroVideo, {
+            y: progress * 100,
+            opacity: 1 - progress * 0.5
+          });
+        }
+      });
     }
   </script>
 
