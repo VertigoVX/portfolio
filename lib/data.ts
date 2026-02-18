@@ -15,7 +15,7 @@ export const about = {
   email: 'tristan.david1503@icloud.com',
   title: 'Junior Full Stack Engineer',
   typingStrings: [
-    'Junior Full Stack Engineer',
+    'Full Stack Engineer',
     2000,
     'Python Developer',
     2000,
@@ -38,27 +38,28 @@ export const about = {
     { name: 'Japanese', level: 'Intermediate', pct: 55 },
     { name: 'Korean', level: 'Conversational', pct: 35 },
   ],
-  programmingLanguages: ['Python', 'JavaScript', 'TypeScript', 'HTML5', 'CSS3', 'Git'],
+  programmingLanguages: ['Python', 'React', 'Next.js', 'JavaScript', 'TypeScript'],
   interests: ['Video Games', 'Music', 'Languages', 'Travel'],
 }
 
 export const skills = {
   frontend: [
-    { name: 'React', level: 90 },
-    { name: 'Next.js', level: 85 },
-    { name: 'HTML5', level: 95 },
+    { name: 'React', level: 70 },
+    { name: 'Next.js', level: 65 },
+    { name: 'HTML5', level: 90 },
     { name: 'CSS3', level: 90 },
     { name: 'JavaScript', level: 88 },
   ],
   backend: [
-    { name: 'Python', level: 92 },
-    { name: 'Node.js', level: 80 },
-    { name: 'REST APIs', level: 85 },
+    { name: 'Python', level: 80 },
+    { name: 'Node.js', level: 75 },
+    { name: 'REST APIs', level: 90 },
   ],
   tools: [
     { name: 'Git', level: 90 },
     { name: 'GitHub', level: 92 },
-    { name: 'Docker', level: 75 },
+    { name: 'Docker', level: 85 },
+    { name: 'AWS', level: 65 },
   ],
 }
 
@@ -158,7 +159,7 @@ export const experiences: Experience[] = [
     role: 'Junior Software Developer (Backend)',
     company: 'EOH',
     description: [
-      'Delivered software solutions across multiple client projects',
+      'Delivered electricity based software solutions across multiple client projects',
       'Applied development methodologies and best practices',
       'Contributed to backend architecture and code quality improvements',
     ],
