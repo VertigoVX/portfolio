@@ -170,7 +170,7 @@ export const experiences: Experience[] = [
   {
     period: '2019 — 2020',
     role: 'PA to Investment Banker',
-    company: 'Private Finance',
+    company: 'ABSA',
     description: [
       'Provided executive administrative support in a high-pressure financial environment',
       'Managed scheduling, communications, and document preparation',
