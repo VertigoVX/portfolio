@@ -1,0 +1,345 @@
+@import "tailwindcss";
+
+/* ─── Dark-mode via .dark class (next-themes) ─── */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── CSS Custom Properties ─── */
+:root {
+  --accent: #00eaff;
+  --accent-hover: #33efff;
+  --accent-glow: rgba(0, 234, 255, 0.22);
+  --bg-primary: #080808;
+  --bg-surface: rgba(255, 255, 255, 0.035);
+  --bg-card: rgba(255, 255, 255, 0.055);
+  --text-primary: #f0f0f0;
+  --text-muted: rgba(240, 240, 240, 0.5);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-hover: rgba(0, 234, 255, 0.35);
+  --scrollbar-bg: #080808;
+  --scrollbar-thumb: rgba(0, 234, 255, 0.3);
+
+  /* Glass-specific tokens (dark) */
+  --glass-bg: rgba(255, 255, 255, 0.052);
+  --glass-highlight: rgba(255, 255, 255, 0.22);
+  --glass-border: rgba(255, 255, 255, 0.11);
+  --glass-shadow: rgba(0, 0, 0, 0.28);
+}
+
+.light {
+  --accent: #0066cc;
+  --accent-hover: #0052a3;
+  --accent-glow: rgba(0, 102, 204, 0.18);
+  --bg-primary: #eef0f5;
+  --bg-surface: rgba(255, 255, 255, 0.55);
+  --bg-card: rgba(255, 255, 255, 0.80);
+  --text-primary: #0d0d0d;
+  --text-muted: rgba(13, 13, 13, 0.5);
+  --border: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 102, 204, 0.4);
+  --scrollbar-bg: #eef0f5;
+  --scrollbar-thumb: rgba(0, 102, 204, 0.35);
+
+  /* Glass-specific tokens (light) */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-highlight: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.82);
+  --glass-shadow: rgba(0, 0, 0, 0.05);
+}
+
+/* ─── Base ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hide default cursor on pointer devices (custom cursor active) */
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+}
+
+/* ─── Selection ─── */
+::selection {
+  background: var(--accent);
+  color: #000;
+}
+
+/* ─── Focus ─── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   LIQUID GLASS SYSTEM  —  Apple iOS / visionOS inspired
+   ════════════════════════════════════════════════════════════ */
+
+/*
+  Base glass panel
+  ─ Heavy backdrop blur + saturation boost (key to Apple's look)
+  ─ Layered radial gradient simulates the light-source specular
+  ─ Inset box-shadow replicates the thin top-edge highlight
+*/
+.glass {
+  background:
+    radial-gradient(
+      ellipse at 18% 10%,
+      rgba(255, 255, 255, 0.12) 0%,
+      transparent 55%
+    ),
+    var(--glass-bg);
+  backdrop-filter: blur(48px) saturate(190%) brightness(1.04);
+  -webkit-backdrop-filter: blur(48px) saturate(190%) brightness(1.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow:
+    0 8px 40px var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.glass:hover {
+  border-color: rgba(255, 255, 255, 0.20);
+  box-shadow:
+    0 12px 56px var(--glass-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 1px 0 0 rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Light mode glass overrides */
+.light .glass {
+  background:
+    radial-gradient(
+      ellipse at 18% 10%,
+      rgba(255, 255, 255, 0.98) 0%,
+      transparent 55%
+    ),
+    var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow:
+    0 8px 40px var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 1px 0 0 rgba(255, 255, 255, 0.6);
+}
+
+.light .glass:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 12px 56px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 1px 0 0 rgba(255, 255, 255, 0.7);
+}
+
+/*
+  .glass-shimmer — adds a slow sweep of refracted light across the card.
+  Apply to cards that have overflow: visible content (safe to clip).
+  Not used on the chart container or scroll containers.
+*/
+.glass-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.055) 50%,
+    transparent 80%
+  );
+  transform: skewX(-15deg);
+  animation: glass-sweep 9s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+@keyframes glass-sweep {
+  0%   { left: -120%; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { left: 200%; opacity: 0; }
+}
+
+/*
+  .glass-orb — decorative morphing glass sphere
+  Used in the Hero section as depth/atmosphere elements
+*/
+@keyframes morph-orb {
+  0%,  100% { border-radius: 60% 40% 55% 45% / 65% 50% 50% 35%; }
+  25%        { border-radius: 35% 65% 45% 55% / 45% 65% 35% 55%; }
+  50%        { border-radius: 55% 45% 35% 65% / 35% 45% 65% 55%; }
+  75%        { border-radius: 45% 55% 65% 35% / 55% 35% 65% 45%; }
+}
+
+/* ─── Utility classes ─── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+
+@media (max-width: 768px) {
+  .section-container {
+    padding: 4rem 1.25rem;
+  }
+}
+
+/* ─── Lenis smooth scroll ─── */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ─── Buttons ─── */
+
+/* Filled accent pill — glass-tinted highlight */
+.btn-primary {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      transparent 55%
+    ),
+    var(--accent);
+  color: #000;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 4px 20px var(--accent-glow);
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 8px 32px rgba(0, 234, 255, 0.4);
+}
+
+/* Outline glass pill */
+.btn-outline {
+  background:
+    radial-gradient(
+      ellipse at 30% 20%,
+      rgba(255, 255, 255, 0.10) 0%,
+      transparent 60%
+    ),
+    rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  padding: 0.875rem 2rem;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 4px 24px var(--accent-glow);
+}
+
+/* ─── Tags ─── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background:
+    radial-gradient(
+      ellipse at 30% 30%,
+      rgba(255, 255, 255, 0.10) 0%,
+      transparent 70%
+    ),
+    var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.tag-accent {
+  background:
+    radial-gradient(
+      ellipse at 30% 30%,
+      rgba(0, 234, 255, 0.14) 0%,
+      rgba(0, 234, 255, 0.04) 70%
+    );
+  border-color: rgba(0, 234, 255, 0.22);
+  color: var(--accent);
+}
+
+.light .tag-accent {
+  background:
+    radial-gradient(
+      ellipse at 30% 30%,
+      rgba(0, 102, 204, 0.12) 0%,
+      rgba(0, 102, 204, 0.04) 70%
+    );
+  border-color: rgba(0, 102, 204, 0.22);
+  color: var(--accent);
+}
